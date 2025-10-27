@@ -1,0 +1,81 @@
+import random
+import time
+
+#simulazione parametri modificabili colture
+colture = {
+    "Patata": {
+        "principale_nutriente": "Carboidrati",
+        "descrizione_prodotto": "la patata è un alimento ricco di amcarboidrati e amido, nonche di potassio e vitamina B e C.",
+        "superficie_coltivata_ettari": 1,           #inserire il numero di ettari dedicati alla coltivazione della patata
+        "resa_per_ettaro": 40000,                   #inserire la resa per ettaro della patata (kg/ettaro)
+        "giorni_crescita": 70                       #inserire il numero di giorni che passano dalla semina alla raccolta
+    },
+    "Piselli": {
+        "principale_nutriente": "Proteine e fibre",
+        "descrizione_prodotto": "I piselli sono fonte di proteine vegetali, fibre e ferro.",
+        "superficie_coltivata_ettari": 1,           #inserire il numero di ettari dedicati alla coltivazione dei piselli
+        "resa_per_ettaro": 3000,                    #inserire la resa per ettaro dei piselli (kg/ettaro)
+        "giorni_crescita": 60                       #inserire il numero di giorni che passano dalla semina alla raccolta
+    },
+    "Spinaci": {
+        "principale_nutriente": "Vitamine",
+        "descrizione_prodotto": "Gli spinaci sono un alimento riccho di vitamina A,e C, ma anche di ferro e calcio.",
+        "superficie_coltivata_ettari": 1,            #inserire il numero di ettari dedicati alla coltivazione degli spinaci
+        "resa_per_ettaro": 20000,                    #inserire la resa per ettaro degli spinaci (kg/ettaro)
+        "giorni_crescita": 40                        #inserire il numero di giorni che passano dalla semina alla raccolta
+    }
+}
+
+capacita_giornaliera_raccolta = 5000                #indicare quanti chili si riescono a raccogliere (kg/giorno)
+
+#  simulazione crescita della pianta
+def simula_crescita(coltura, giorni):
+    print(f"\nAvvio coltivazione di {coltura} ({giorni} giorni di crescita)...")
+    for giorno in range(1, giorni + 1, max(1, giorni // 4)):
+        print(f"  Giorno {giorno}/{giorni} - la pianta cresce...")
+        time.sleep(0.15)
+    print(f"Coltivazione di {coltura} completata!")
+    return giorni
+
+#  simulazione raccolta della pianta
+def simula_raccolta(coltura, quantita):
+    print(f"\nRaccolta {coltura} in corso...")
+    giorni_raccolta = quantita // capacita_giornaliera_raccolta + 1
+    for giorno in range(1, giorni_raccolta + 1):
+        raccolto = min(capacita_giornaliera_raccolta, quantita)
+        quantita -= raccolto
+        print(f"  Giorno {giorno}: raccolti {raccolto} kg. Restano {quantita} kg.")
+        time.sleep(0.15)
+    print(f"{coltura} stoccato in magazzino.\n")
+    return giorni_raccolta
+
+# simulazione processo di produzione
+def simula_produzione_agricola():
+    print("SIMULAZIONE PRODUZIONE AGRICOLA")
+
+    for coltura, dati in colture.items():
+        produzione_prevista = dati["superficie_coltivata_ettari"] * dati["resa_per_ettaro"]
+        produzione_reale = random.randint(int(produzione_prevista * 0.8),
+                                          int(produzione_prevista * 1.2))
+        
+        print(f"\n=== {coltura.upper()} ===")
+        print(f"Categoria: {dati['principale_nutriente']}")
+        print(f"Descrizione: {dati['descrizione_prodotto']}")
+        print(f"Superficie coltivata: {dati['superficie_coltivata_ettari']} ettari")
+        print(f"Resa stimata: {produzione_prevista} kg")
+        print(f"Produzione reale (simulata): {produzione_reale} kg")
+
+        giorni_crescita = simula_crescita(coltura, dati["giorni_crescita"])
+        giorni_raccolta = simula_raccolta(coltura, produzione_reale)
+
+        # Calcolo tempo di produzione complessivo
+        tempo_totale = giorni_crescita + giorni_raccolta
+        print(f"\n TEMPO TOTALE DI PRODUZIONE PER {coltura}:")
+        print(f"  {giorni_crescita} giorni di crescita + {giorni_raccolta} giorni di raccolta = {tempo_totale} giorni totali\n")
+
+
+    print("\nSimulazione completata con successo!")
+
+# Avvio della simulazione
+simula_produzione_agricola()
+
